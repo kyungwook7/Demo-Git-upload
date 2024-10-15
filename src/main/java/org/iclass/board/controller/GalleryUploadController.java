@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.List;
 import java.io.File;
 import java.io.IOException;
 
@@ -37,5 +37,20 @@ public class GalleryUploadController {
         uploadService.uploadGallery(dto);
 
         return "redirect:/gallery";
+    }
+
+    @GetMapping("/galleries")
+    public String galleries(Model model) {
+       //전체 리스트 가져오기
+        List<GalleryDTO> list = uploadService.list();
+        model.addAttribute("list", list);
+        return "galleries";
+    }
+
+    @PostMapping("/galleries")
+    public String uploadMany(GalleryDTO dto) throws IOException {
+        //하나의 요청으로 여러개의 파일을 업로드
+        uploadService.uploadManyFile(dto);
+        return "redirect:/galleries";
     }
 }
